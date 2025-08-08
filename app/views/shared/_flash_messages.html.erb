@@ -1,37 +1,70 @@
-<!-- app/views/shared/_flash_messages.html.erb -->
-<% if notice %>
-  <div class="fixed top-20 left-4 right-4 z-40 bg-green-500/90 backdrop-blur-sm text-white px-4 py-3 rounded-lg shadow-lg border border-green-400" data-turbo-temporary>
-    <div class="flex items-center space-x-2">
-      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-      </svg>
-      <span><%= notice %></span>
+<!-- app/views/shared/_flash_messages.html.erb - Improved -->
+<div id="flash-messages" class="fixed top-20 left-4 right-4 z-50 space-y-2">
+  <% if notice %>
+    <div class="bg-green-50 dark:bg-green-950/90 backdrop-blur-sm border border-green-200 dark:border-green-800 text-green-800 dark:text-green-200 px-4 py-3 rounded-xl shadow-lg animate-fade-in" data-flash-message>
+      <div class="flex items-start">
+        <svg class="w-5 h-5 mr-3 mt-0.5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1">
+          <p class="font-medium"><%= notice %></p>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-200 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
 
-<% if alert %>
-  <div class="fixed top-20 left-4 right-4 z-40 bg-red-500/90 backdrop-blur-sm text-white px-4 py-3 rounded-lg shadow-lg border border-red-400" data-turbo-temporary>
-    <div class="flex items-center space-x-2">
-      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-      </svg>
-      <span><%= alert %></span>
+  <% if alert %>
+    <div class="bg-red-50 dark:bg-red-950/90 backdrop-blur-sm border border-red-200 dark:border-red-800 text-red-800 dark:text-red-200 px-4 py-3 rounded-xl shadow-lg animate-fade-in" data-flash-message>
+      <div class="flex items-start">
+        <svg class="w-5 h-5 mr-3 mt-0.5 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <div class="flex-1">
+          <p class="font-medium"><%= alert %></p>
+        </div>
+        <button onclick="this.parentElement.parentElement.remove()" class="ml-2 text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200 transition-colors">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
+
+<style>
+  .animate-fade-in {
+    animation: fadeInSlide 0.3s ease-out forwards;
+  }
+  
+  @keyframes fadeInSlide {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
 
 <script>
   // Auto-hide flash messages
   document.addEventListener('DOMContentLoaded', function() {
-    const flashMessages = document.querySelectorAll('[data-turbo-temporary]');
+    const flashMessages = document.querySelectorAll('[data-flash-message]');
     flashMessages.forEach(message => {
       setTimeout(() => {
         message.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
         message.style.opacity = '0';
         message.style.transform = 'translateY(-20px)';
         setTimeout(() => message.remove(), 500);
-      }, 4000);
+      }, 5000);
     });
   });
 </script>

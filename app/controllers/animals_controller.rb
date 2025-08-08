@@ -1,10 +1,10 @@
 # app/controllers/animals_controller.rb
 class AnimalsController < ApplicationController
-  before_action :set_animal, only: [:show, :edit, :update, :destroy]
-  before_action :ensure_same_company!, only: [:show, :edit, :update, :destroy]
+  before_action :set_animal, only: [:show, :edit, :update, :destroy, :qr_code]
+  before_action :ensure_same_company!, only: [:show, :edit, :update, :destroy, :qr_code]
 
   def index
-    @animals = filter_by_company(Animal.includes(:user, :company)).page(params[:page])
+    @animals = filter_by_company(Animal.includes(:user, :company, :vaccinations))
   end
 
   def show
@@ -19,11 +19,17 @@ class AnimalsController < ApplicationController
     @animal = Animal.new(animal_params)
     @animal.user = current_user
     @animal.company_id = @current_company_id
-    @owner = Owner.find_or_initialize_by(name: params[:animal][:owner_name],
-                                         phone: params[:animal][:owner_phone],
-                                         email: params[:animal][:owner_email],
-                                         company_id: @current_company_id)
-    @animal.owner = @owner if @owner.save
+    
+    # Encontrar ou criar owner se dados foram fornecidos
+    if animal_params[:owner_name].present?
+      @owner = Owner.find_or_initialize_by(
+        name: animal_params[:owner_name],
+        phone: animal_params[:owner_phone],
+        email: animal_params[:owner_email],
+        company_id: @current_company_id
+      )
+      @animal.owner = @owner if @owner.save
+    end
 
     if @animal.save
       redirect_to @animal, notice: 'Animal cadastrado com sucesso!'
@@ -49,13 +55,10 @@ class AnimalsController < ApplicationController
   end
 
   def qr_code
-    @animal = Animal.find(params[:id])
-    ensure_same_company!(@animal)
-    
     respond_to do |format|
       format.png do
         png = @animal.generate_qr_code
-        send_data png.to_s, type: 'image/png', disposition: 'inline'
+        send_data png.to_s, type: 'image/png', disposition: 'inline', filename: "qr_code_#{@animal.name.parameterize}.png"
       end
     end
   end

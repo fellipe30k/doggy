@@ -1,70 +1,62 @@
+# Correção no app/controllers/vaccinations_controller.rb
 class VaccinationsController < ApplicationController
-  before_action :set_vaccination, only: %i[ show edit update destroy ]
+  before_action :set_vaccination, only: %i[show edit update destroy]
+  before_action :ensure_same_company!, only: %i[show edit update destroy]
 
-  # GET /vaccinations or /vaccinations.json
   def index
-    @vaccinations = Vaccination.all
+    @vaccinations = filter_by_company(Vaccination.includes(:animal, :user)).recent
   end
 
-  # GET /vaccinations/1 or /vaccinations/1.json
   def show
   end
 
-  # GET /vaccinations/new
   def new
     @vaccination = Vaccination.new
+    @animals = filter_by_company(Animal.all).order(:name)
   end
 
-  # GET /vaccinations/1/edit
-  def edit
-  end
-
-  # POST /vaccinations or /vaccinations.json
   def create
     @vaccination = Vaccination.new(vaccination_params)
+    @vaccination.user = current_user
+    @vaccination.company_id = @current_company_id
 
-    respond_to do |format|
-      if @vaccination.save
-        format.html { redirect_to @vaccination, notice: "Vaccination was successfully created." }
-        format.json { render :show, status: :created, location: @vaccination }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @vaccination.errors, status: :unprocessable_entity }
-      end
+    if @vaccination.save
+      redirect_to @vaccination, notice: 'Vacinação registrada com sucesso!'
+    else
+      @animals = filter_by_company(Animal.all).order(:name)
+      render :new, status: :unprocessable_entity
     end
   end
 
-  # PATCH/PUT /vaccinations/1 or /vaccinations/1.json
+  def edit
+    @animals = filter_by_company(Animal.all).order(:name)
+  end
+
   def update
-    respond_to do |format|
-      if @vaccination.update(vaccination_params)
-        format.html { redirect_to @vaccination, notice: "Vaccination was successfully updated." }
-        format.json { render :show, status: :ok, location: @vaccination }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @vaccination.errors, status: :unprocessable_entity }
-      end
+    if @vaccination.update(vaccination_params)
+      redirect_to @vaccination, notice: 'Vacinação atualizada com sucesso!'
+    else
+      @animals = filter_by_company(Animal.all).order(:name)
+      render :edit, status: :unprocessable_entity
     end
   end
 
-  # DELETE /vaccinations/1 or /vaccinations/1.json
   def destroy
-    @vaccination.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to vaccinations_path, status: :see_other, notice: "Vaccination was successfully destroyed." }
-      format.json { head :no_content }
-    end
+    @vaccination.destroy
+    redirect_to vaccinations_url, notice: 'Vacinação removida com sucesso!'
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_vaccination
-      @vaccination = Vaccination.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def vaccination_params
-      params.expect(vaccination: [ :animal_id, :vaccine_name, :vaccine_brand, :application_date, :next_dose_date, :veterinarian_name, :batch_number, :observations, :user_id, :company_id ])
-    end
+  def set_vaccination
+    @vaccination = Vaccination.find(params[:id])
+  end
+
+  def vaccination_params
+    params.require(:vaccination).permit(:animal_id, :vaccine_name, :vaccine_brand, :application_date, :next_dose_date, :veterinarian_name, :batch_number, :observations)
+  end
+
+  def ensure_same_company!
+    super(@vaccination)
+  end
 end

@@ -1,36 +1,95 @@
 <!-- app/views/dashboard/index.html.erb -->
-<div class="p-4 pb-20">
+<div class="space-y-6">
   <!-- Header -->
-  <div class="mb-6">
-    <h1 class="text-2xl font-bold text-white">Olá, <%= current_user.first_name %>! 👋</h1>
-    <p class="text-gray-400">Bem-vindo ao Doggy</p>
+  <div class="bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 rounded-2xl p-6 lg:p-8 text-white shadow-lg">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl lg:text-3xl font-bold mb-2">
+          Olá, <%= current_user.first_name %>! 👋
+        </h1>
+        <p class="text-blue-100 lg:text-lg">Bem-vindo ao sistema Doggy</p>
+        <% if @current_company_id %>
+          <p class="text-sm text-blue-200 mt-2">
+            <span class="inline-flex items-center space-x-1">
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a1 1 0 110 2h-3a1 1 0 01-1-1v-2a1 1 0 00-1-1H9a1 1 0 00-1 1v2a1 1 0 01-1 1H4a1 1 0 110-2V4zm3 1h2v2H7V5zm2 4H7v2h2V9zm2-4h2v2h-2V5zm2 4h-2v2h2V9z" clip-rule="evenodd"/>
+              </svg>
+              <span><%= Company.find(@current_company_id).name %></span>
+            </span>
+          </p>
+        <% end %>
+      </div>
+      <div class="hidden lg:block">
+        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center">
+          <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- Quick Stats -->
-  <div class="grid grid-cols-2 gap-4 mb-6">
-    <div class="bg-blue-500/20 border border-blue-500/30 rounded-2xl p-4">
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-blue-400 text-sm">Animais</p>
-          <p class="text-2xl font-bold text-white"><%= @animals_count %></p>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Animais</p>
+          <p class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@animals_count || 0) %>
+          </p>
         </div>
-        <div class="p-3 bg-blue-500/30 rounded-xl">
-          <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-blue-100 dark:bg-blue-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 lg:w-8 lg:h-8 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
           </svg>
         </div>
       </div>
     </div>
 
-    <div class="bg-green-500/20 border border-green-500/30 rounded-2xl p-4">
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
       <div class="flex items-center justify-between">
         <div>
-          <p class="text-green-400 text-sm">Vacinas Este Mês</p>
-          <p class="text-2xl font-bold text-white"><%= @vaccinations_count %></p>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Vacinas (Mês)</p>
+          <p class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@vaccinations_count || 0) %>
+          </p>
         </div>
-        <div class="p-3 bg-green-500/30 rounded-xl">
-          <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-green-100 dark:bg-green-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 lg:w-8 lg:h-8 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Usuários Ativos</p>
+          <p class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(filter_by_company(User.active).count) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-purple-100 dark:bg-purple-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 lg:w-8 lg:h-8 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M16 4c0-1.11.89-2 2-2s2 .89 2 2-.89 2-2 2-2-.89-2-2zm4 18v-6h2.5l-2.54-7.63A3.01 3.01 0 0 0 16.98 7H15.2c-.39 0-.74.23-.9.59L12.8 11h-1.6l-1.5-3.41c-.16-.36-.51-.59-.9-.59H7.02a3.01 3.01 0 0 0-2.98 1.37L1.5 16H4v6h4v-6h2v6h4z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 lg:p-6 shadow-sm hover:shadow-md transition-shadow">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Total Vacinas</p>
+          <p class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(filter_by_company(Vaccination.all).count) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-orange-100 dark:bg-orange-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 lg:w-8 lg:h-8 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
           </svg>
         </div>
       </div>
@@ -38,41 +97,290 @@
   </div>
 
   <!-- Quick Actions -->
-  <div class="mb-6">
-    <h2 class="text-lg font-semibold text-white mb-3">Ações Rápidas</h2>
-    <div class="grid grid-cols-2 gap-3">
-      <%= link_to new_animal_path, class: "bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-2xl p-4 text-center transition-colors" do %>
-        <div class="mx-auto w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-2">
-          <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+  <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm">
+    <h2 class="text-xl font-bold text-stone-900 dark:text-stone-100 mb-4">Ações Rápidas</h2>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <%= link_to new_animal_path, class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-blue-50 dark:hover:bg-blue-950/50 border border-stone-200 dark:border-stone-700 hover:border-blue-300 dark:hover:border-blue-700 rounded-2xl p-4 text-center transition-all duration-300" do %>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-blue-100 dark:bg-blue-950/50 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/50 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
+          <svg class="w-6 h-6 lg:w-7 lg:h-7 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
           </svg>
         </div>
-        <p class="text-white font-medium">Novo Animal</p>
-        <p class="text-xs text-gray-400">Cadastrar animal</p>
+        <p class="text-stone-900 dark:text-stone-100 font-semibold text-sm lg:text-base">Novo Animal</p>
+        <p class="text-xs lg:text-sm text-stone-500 dark:text-stone-400 mt-1">Cadastrar animal</p>
       <% end %>
 
-      <%= link_to vaccinations_path, class: "bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-2xl p-4 text-center transition-colors" do %>
-        <div class="mx-auto w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-2">
-          <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+      <%= link_to new_vaccination_path, class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-green-50 dark:hover:bg-green-950/50 border border-stone-200 dark:border-stone-700 hover:border-green-300 dark:hover:border-green-700 rounded-2xl p-4 text-center transition-all duration-300" do %>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-green-100 dark:bg-green-950/50 group-hover:bg-green-200 dark:group-hover:bg-green-900/50 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
+          <svg class="w-6 h-6 lg:w-7 lg:h-7 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
           </svg>
         </div>
-        <p class="text-white font-medium">Vacinas</p>
-        <p class="text-xs text-gray-400">Ver histórico</p>
+        <p class="text-stone-900 dark:text-stone-100 font-semibold text-sm lg:text-base">Nova Vacina</p>
+        <p class="text-xs lg:text-sm text-stone-500 dark:text-stone-400 mt-1">Registrar vacinação</p>
+      <% end %>
+
+      <%= link_to vaccinations_path, class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-purple-50 dark:hover:bg-purple-950/50 border border-stone-200 dark:border-stone-700 hover:border-purple-300 dark:hover:border-purple-700 rounded-2xl p-4 text-center transition-all duration-300" do %>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-purple-100 dark:bg-purple-950/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
+          <svg class="w-6 h-6 lg:w-7 lg:h-7 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <p class="text-stone-900 dark:text-stone-100 font-semibold text-sm lg:text-base">Histórico</p>
+        <p class="text-xs lg:text-sm text-stone-500 dark:text-stone-400 mt-1">Ver vacinas</p>
+      <% end %>
+
+      <%= link_to animals_path, class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-orange-50 dark:hover:bg-orange-950/50 border border-stone-200 dark:border-stone-700 hover:border-orange-300 dark:hover:border-orange-700 rounded-2xl p-4 text-center transition-all duration-300" do %>
+        <div class="w-12 h-12 lg:w-14 lg:h-14 bg-orange-100 dark:bg-orange-950/50 group-hover:bg-orange-200 dark:group-hover:bg-orange-900/50 rounded-xl flex items-center justify-center mx-auto mb-3 transition-colors">
+          <svg class="w-6 h-6 lg:w-7 lg:h-7 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+        <p class="text-stone-900 dark:text-stone-100 font-semibold text-sm lg:text-base">Ver Animais</p>
+        <p class="text-xs lg:text-sm text-stone-500 dark:text-stone-400 mt-1">Listar todos</p>
       <% end %>
     </div>
   </div>
 
   <!-- Recent Animals -->
-  <div class="mb-6">
-    <div class="flex justify-between items-center mb-3">
-      <h2 class="text-lg font-semibold text-white">Animais Recentes</h2>
-      <%= link_to animals_path, class: "text-blue-400 text-sm" do %>
-        Ver todos
+  <% if @recent_animals&.any? %>
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-xl font-bold text-stone-900 dark:text-stone-100">Animais Recentes</h2>
+        <%= link_to animals_path, class: "text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium transition-colors" do %>
+          Ver todos →
+        <% end %>
+      </div>
+      <div class="grid gap-4 lg:grid-cols-2 xl:grid-cols-3">
+        <% @recent_animals.each do |animal| %>
+          <%= render 'shared/animal_card', animal: animal %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<!-- app/views/vaccinations/index.html.erb -->
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100">Vacinações</h1>
+      <p class="text-stone-600 dark:text-stone-400 mt-1">Gerenciar histórico de vacinações</p>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to new_vaccination_path, 
+          class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-xl transition-colors shadow-lg hover:shadow-xl" do %>
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Nova Vacinação
       <% end %>
     </div>
-    <% @recent_animals&.each do |animal| %>
-      <%= render 'shared/animal_card', animal: animal %>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Total</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@vaccinations&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Este Mês</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@vaccinations&.where('application_date >= ?', Date.current.beginning_of_month)&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 dark:bg-green-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Próximas</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@vaccinations&.where('next_dose_date BETWEEN ? AND ?', Date.current, Date.current + 30.days)&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-yellow-100 dark:bg-yellow-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-yellow-600 dark:text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Atrasadas</p>
+          <p class="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">
+            <%= number_with_delimiter(@vaccinations&.where('next_dose_date < ?', Date.current)&.where&.not(next_dose_date: nil)&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-red-100 dark:bg-red-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-red-600 dark:text-red-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.5 6L12 10.5 8.5 8 12 5.5 15.5 8zM12 13.5l3.5 2.5L12 18.5 8.5 16 12 13.5z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vaccinations List -->
+  <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-sm overflow-hidden">
+    <% if @vaccinations&.any? %>
+      <div class="overflow-x-auto">
+        <div class="space-y-1">
+          <% @vaccinations.each_with_index do |vaccination, index| %>
+            <div class="p-4 lg:p-6 <%= 'border-b border-stone-200 dark:border-stone-800' if index < @vaccinations.count - 1 %> hover:bg-stone-50 dark:hover:bg-stone-800/50 transition-colors">
+              <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                <div class="flex-1">
+                  <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                      <% if vaccination.animal.photo.attached? %>
+                        <%= image_tag vaccination.animal.photo, class: "w-12 h-12 lg:w-16 lg:h-16 rounded-xl object-cover" %>
+                      <% else %>
+                        <div class="w-12 h-12 lg:w-16 lg:h-16 bg-stone-200 dark:bg-stone-700 rounded-xl flex items-center justify-center">
+                          <svg class="w-6 h-6 lg:w-8 lg:h-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                          </svg>
+                        </div>
+                      <% end %>
+                    </div>
+                    
+                    <div class="flex-1">
+                      <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-2 lg:gap-4">
+                        <div>
+                          <h3 class="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                            <%= link_to vaccination.animal.name, animal_path(vaccination.animal), 
+                                class: "hover:text-blue-600 dark:hover:text-blue-400 transition-colors" %>
+                          </h3>
+                          <p class="text-sm text-stone-600 dark:text-stone-400">
+                            <%= vaccination.animal.species %> • <%= vaccination.animal.breed %>
+                          </p>
+                        </div>
+                        
+                        <div class="lg:text-right">
+                          <p class="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                            <%= vaccination.vaccine_name %>
+                          </p>
+                          <p class="text-sm text-stone-500 dark:text-stone-400">
+                            <%= vaccination.vaccine_brand %>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div class="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                        <div>
+                          <p class="text-stone-500 dark:text-stone-400 font-medium">Aplicação</p>
+                          <p class="text-stone-900 dark:text-stone-100">
+                            <%= vaccination.application_date.strftime("%d/%m/%Y") %>
+                          </p>
+                        </div>
+                        
+                        <% if vaccination.next_dose_date %>
+                          <div>
+                            <p class="text-stone-500 dark:text-stone-400 font-medium">Próxima Dose</p>
+                            <p class="text-stone-900 dark:text-stone-100 <%= 'text-red-600 dark:text-red-400 font-semibold' if vaccination.overdue? %>">
+                              <%= vaccination.next_dose_date.strftime("%d/%m/%Y") %>
+                              <% if vaccination.overdue? %>
+                                <span class="text-xs">(Atrasada)</span>
+                              <% end %>
+                            </p>
+                          </div>
+                        <% end %>
+                        
+                        <div>
+                          <p class="text-stone-500 dark:text-stone-400 font-medium">Veterinário</p>
+                          <p class="text-stone-900 dark:text-stone-100">
+                            <%= vaccination.veterinarian_name %>
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p class="text-stone-500 dark:text-stone-400 font-medium">Lote</p>
+                          <p class="text-stone-900 dark:text-stone-100 font-mono text-xs">
+                            <%= vaccination.batch_number %>
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <% if vaccination.observations.present? %>
+                        <div class="mt-3">
+                          <p class="text-stone-500 dark:text-stone-400 font-medium text-sm">Observações</p>
+                          <p class="text-stone-700 dark:text-stone-300 text-sm mt-1">
+                            <%= vaccination.observations %>
+                          </p>
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="flex-shrink-0 flex gap-2">
+                  <%= link_to vaccination_path(vaccination), 
+                      class: "inline-flex items-center px-3 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-sm font-medium rounded-lg transition-colors" do %>
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    Ver
+                  <% end %>
+                  
+                  <%= link_to edit_vaccination_path(vaccination), 
+                      class: "inline-flex items-center px-3 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm font-medium rounded-lg transition-colors" do %>
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Editar
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="p-12 text-center">
+        <div class="w-24 h-24 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <svg class="w-12 h-12 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-stone-900 dark:text-stone-100 mb-2">
+          Nenhuma vacinação encontrada
+        </h3>
+        <p class="text-stone-600 dark:text-stone-400 mb-6">
+          Comece registrando a primeira vacinação dos animais.
+        </p>
+        <%= link_to new_vaccination_path, 
+            class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors" do %>
+          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Registrar Primeira Vacinação
+        <% end %>
+      </div>
     <% end %>
   </div>
 </div>

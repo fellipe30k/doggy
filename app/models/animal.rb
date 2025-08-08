@@ -19,7 +19,11 @@ class Animal < ApplicationRecord
   end
 
   def qr_code_data
-    Rails.application.routes.url_helpers.animal_vaccinations_url(self, host: Rails.application.config.action_mailer.default_url_options[:host])
+    # CORRIGIDO: Usar a rota correta para visualização pública
+    Rails.application.routes.url_helpers.public_animal_vaccinations_url(
+      self, 
+      host: Rails.application.config.action_mailer.default_url_options[:host] || 'localhost:3000'
+    )
   end
 
   def generate_qr_code

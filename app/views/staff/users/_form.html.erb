@@ -1,0 +1,128 @@
+<!-- app/views/staff/users/_form.html.erb -->
+<div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm">
+  <%= form_with model: [:staff, user], class: "space-y-6" do |form| %>
+    <% if user.errors.any? %>
+      <div class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
+        <div class="flex items-start">
+          <svg class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+          </svg>
+          <div>
+            <h3 class="text-red-800 dark:text-red-200 font-semibold mb-2">
+              Erro ao salvar (<%= pluralize(user.errors.count, "erro") %>):
+            </h3>
+            <ul class="text-red-700 dark:text-red-300 text-sm space-y-1">
+              <% user.errors.full_messages.each do |message| %>
+                <li>• <%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Nome -->
+      <div>
+        <%= form.label :first_name, "Nome *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.text_field :first_name, 
+            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+            placeholder: "Nome",
+            required: true %>
+      </div>
+
+      <!-- Sobrenome -->
+      <div>
+        <%= form.label :last_name, "Sobrenome *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.text_field :last_name, 
+            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+            placeholder: "Sobrenome",
+            required: true %>
+      </div>
+
+      <!-- Email -->
+      <div>
+        <%= form.label :email, "E-mail *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.email_field :email, 
+            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+            placeholder: "email@exemplo.com",
+            required: true %>
+      </div>
+
+      <!-- Telefone -->
+      <div>
+        <%= form.label :phone, "Telefone *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.telephone_field :phone, 
+            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+            placeholder: "(00) 00000-0000",
+            required: true %>
+      </div>
+
+      <!-- Role -->
+      <div>
+        <%= form.label :role, "Função *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.select :role, 
+            options_for_select([
+              ['Usuário', 'user'],
+              ['Administrador', 'admin'],
+              ['Staff (Só via console)', 'staff']
+            ], user.role),
+            { prompt: 'Selecione...' },
+            { class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all", 
+              required: true } %>
+      </div>
+
+      <!-- Company -->
+      <div>
+        <%= form.label :company_id, "Clínica *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+        <%= form.select :company_id, 
+            options_from_collection_for_select(Company.active, :id, :name, user.company_id),
+            { prompt: 'Selecione a clínica...' },
+            { class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all", 
+              required: true } %>
+      </div>
+
+      <!-- Password (only for new users) -->
+      <% unless user.persisted? %>
+        <div>
+          <%= form.label :password, "Senha *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+          <%= form.password_field :password, 
+              class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+              placeholder: "Mínimo 6 caracteres",
+              required: true,
+              minlength: 6 %>
+        </div>
+
+        <div>
+          <%= form.label :password_confirmation, "Confirmar Senha *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
+          <%= form.password_field :password_confirmation, 
+              class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all",
+              placeholder: "Digite a senha novamente",
+              required: true %>
+        </div>
+      <% end %>
+
+      <!-- Active Status -->
+      <div class="flex items-center space-x-3">
+        <%= form.check_box :active, 
+            class: "w-5 h-5 text-purple-600 bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded focus:ring-purple-500 focus:ring-2",
+            checked: user.active.nil? ? true : user.active %>
+        <%= form.label :active, "Usuário Ativo", class: "text-sm font-semibold text-stone-700 dark:text-stone-300" %>
+      </div>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-stone-200 dark:border-stone-800">
+      <%= link_to staff_users_path, 
+          class: "inline-flex items-center justify-center px-6 py-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold rounded-xl transition-all" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        Cancelar
+      <% end %>
+      
+      <%= form.submit user.persisted? ? "Atualizar Usuário" : "Criar Usuário", 
+          class: "inline-flex items-center justify-center px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl" %>
+    </div>
+  <% end %>
+</div>

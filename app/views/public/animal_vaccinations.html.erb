@@ -1,0 +1,221 @@
+<!-- app/views/public/animal_vaccinations.html.erb -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <title>Histórico de Vacinação - <%= @animal.name %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="robots" content="noindex">
+    
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag "application" %>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              stone: {
+                50: '#fafaf9', 100: '#f5f5f4', 200: '#e7e5e4', 300: '#d6d3d1',
+                400: '#a8a29e', 500: '#78716c', 600: '#57534e', 700: '#44403c',
+                800: '#292524', 900: '#1c1917', 950: '#0c0a09'
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+
+  <body class="bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 sticky top-0 z-10">
+      <div class="px-4 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
+              <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-xl font-bold text-stone-900 dark:text-stone-100">Cartão de Vacinação</h1>
+              <p class="text-sm text-stone-600 dark:text-stone-400">Acesso do Proprietário</p>
+            </div>
+          </div>
+          
+          <!-- Print Button -->
+          <button onclick="window.print()" class="p-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 rounded-lg transition-colors">
+            <svg class="w-5 h-5 text-stone-600 dark:text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="p-4 max-w-4xl mx-auto">
+      <!-- Animal Info -->
+      <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm mb-6">
+        <div class="flex items-start gap-6">
+          <div class="flex-shrink-0">
+            <% if @animal.photo.attached? %>
+              <%= image_tag @animal.photo, class: "w-24 h-24 rounded-xl object-cover shadow-lg" %>
+            <% else %>
+              <div class="w-24 h-24 bg-gradient-to-br from-stone-200 to-stone-300 dark:from-stone-700 dark:to-stone-800 rounded-xl flex items-center justify-center shadow-lg">
+                <svg class="w-12 h-12 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+                </svg>
+              </div>
+            <% end %>
+          </div>
+          
+          <div class="flex-1">
+            <h2 class="text-2xl font-bold text-stone-900 dark:text-stone-100 mb-2"><%= @animal.name %></h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <p class="text-stone-500 dark:text-stone-400 font-medium">Espécie</p>
+                <p class="text-stone-900 dark:text-stone-100"><%= @animal.species %></p>
+              </div>
+              
+              <div>
+                <p class="text-stone-500 dark:text-stone-400 font-medium">Raça</p>
+                <p class="text-stone-900 dark:text-stone-100"><%= @animal.breed %></p>
+              </div>
+              
+              <div>
+                <p class="text-stone-500 dark:text-stone-400 font-medium">Idade</p>
+                <p class="text-stone-900 dark:text-stone-100"><%= @animal.age_in_years %> anos</p>
+              </div>
+              
+              <div>
+                <p class="text-stone-500 dark:text-stone-400 font-medium">Peso</p>
+                <p class="text-stone-900 dark:text-stone-100"><%= number_with_precision(@animal.weight, precision: 1) %>kg</p>
+              </div>
+            </div>
+            
+            <% if @animal.owner_name.present? %>
+              <div class="mt-4 pt-4 border-t border-stone-200 dark:border-stone-800">
+                <p class="text-stone-500 dark:text-stone-400 font-medium text-sm">Proprietário</p>
+                <p class="text-stone-900 dark:text-stone-100"><%= @animal.owner_name %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Vaccinations -->
+      <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm">
+        <h3 class="text-xl font-bold text-stone-900 dark:text-stone-100 mb-6 flex items-center">
+          <svg class="w-6 h-6 mr-2 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+          Histórico de Vacinações
+        </h3>
+        
+        <% if @vaccinations.any? %>
+          <div class="space-y-4">
+            <% @vaccinations.each do |vaccination| %>
+              <div class="border border-stone-200 dark:border-stone-800 rounded-xl p-4">
+                <div class="flex items-start justify-between mb-3">
+                  <div>
+                    <h4 class="text-lg font-semibold text-stone-900 dark:text-stone-100">
+                      <%= vaccination.vaccine_name %>
+                    </h4>
+                    <p class="text-sm text-stone-600 dark:text-stone-400">
+                      <%= vaccination.vaccine_brand %>
+                    </p>
+                  </div>
+                  
+                  <div class="text-right">
+                    <p class="text-sm font-semibold text-stone-900 dark:text-stone-100">
+                      <%= vaccination.application_date.strftime("%d/%m/%Y") %>
+                    </p>
+                    <p class="text-xs text-stone-500 dark:text-stone-400">Aplicação</p>
+                  </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                  <% if vaccination.next_dose_date %>
+                    <div>
+                      <p class="text-stone-500 dark:text-stone-400 font-medium">Próxima Dose</p>
+                      <p class="text-stone-900 dark:text-stone-100 <%= 'text-red-600 dark:text-red-400 font-semibold' if vaccination.overdue? %>">
+                        <%= vaccination.next_dose_date.strftime("%d/%m/%Y") %>
+                        <% if vaccination.overdue? %>
+                          <span class="text-xs">(Atrasada)</span>
+                        <% end %>
+                      </p>
+                    </div>
+                  <% end %>
+                  
+                  <div>
+                    <p class="text-stone-500 dark:text-stone-400 font-medium">Veterinário</p>
+                    <p class="text-stone-900 dark:text-stone-100">
+                      <%= vaccination.veterinarian_name %>
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <p class="text-stone-500 dark:text-stone-400 font-medium">Lote</p>
+                    <p class="text-stone-900 dark:text-stone-100 font-mono text-xs">
+                      <%= vaccination.batch_number %>
+                    </p>
+                  </div>
+                </div>
+                
+                <% if vaccination.observations.present? %>
+                  <div class="mt-3 pt-3 border-t border-stone-200 dark:border-stone-800">
+                    <p class="text-stone-500 dark:text-stone-400 font-medium text-sm mb-1">Observações</p>
+                    <p class="text-stone-700 dark:text-stone-300 text-sm">
+                      <%= simple_format(vaccination.observations) %>
+                    </p>
+                  </div>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center py-8">
+            <div class="w-16 h-16 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg class="w-8 h-8 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-lg font-semibold text-stone-900 dark:text-stone-100 mb-2">
+              Nenhuma vacinação registrada
+            </h3>
+            <p class="text-stone-600 dark:text-stone-400">
+              Este animal ainda não possui vacinações em seu histórico.
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Footer -->
+      <div class="text-center mt-8 py-4 text-xs text-stone-500 dark:text-stone-400 border-t border-stone-200 dark:border-stone-800">
+        <p>Cartão de vacinação gerado pelo sistema Doggy</p>
+        <p>Data de emissão: <%= Date.current.strftime("%d/%m/%Y") %></p>
+      </div>
+    </main>
+
+    <!-- Print Styles -->
+    <style media="print">
+      @page {
+        margin: 1cm;
+      }
+      
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      
+      header button {
+        display: none;
+      }
+    </style>
+  </body>
+</html>

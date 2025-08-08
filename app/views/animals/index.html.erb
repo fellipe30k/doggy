@@ -1,29 +1,116 @@
-<% content_for :title, "Animals" %>
-
-<div class="w-full">
-  <% if notice.present? %>
-    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
-  <% end %>
-
-  <div class="flex justify-between items-center">
-    <h1 class="font-bold text-4xl">Animals</h1>
-    <%= link_to "New animal", new_animal_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
-  </div>
-
-  <div id="animals" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @animals.any? %>
-      <% @animals.each do |animal| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render animal %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", animal, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_animal_path(animal), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", animal, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
+<!-- app/views/animals/index.html.erb -->
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+    <div>
+      <h1 class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100">Animais</h1>
+      <p class="text-stone-600 dark:text-stone-400 mt-1">Gerenciar animais cadastrados</p>
+    </div>
+    <div class="flex gap-3">
+      <%= link_to new_animal_path, 
+          class: "inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-medium rounded-xl transition-colors shadow-lg hover:shadow-xl" do %>
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Novo Animal
       <% end %>
-    <% else %>
-      <p class="text-center my-10">No animals found.</p>
-    <% end %>
+    </div>
   </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Total</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@animals&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Cães</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@animals&.where(species: 'Cão')&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 dark:bg-green-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Gatos</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@animals&.where(species: 'Gato')&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-4 shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-stone-600 dark:text-stone-400 font-medium">Com Vacinas</p>
+          <p class="text-2xl font-bold text-stone-900 dark:text-stone-100 mt-1">
+            <%= number_with_delimiter(@animals&.joins(:vaccinations)&.distinct&.count || 0) %>
+          </p>
+        </div>
+        <div class="w-12 h-12 bg-orange-100 dark:bg-orange-950/50 rounded-xl flex items-center justify-center">
+          <svg class="w-6 h-6 text-orange-600 dark:text-orange-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Animals Grid -->
+  <% if @animals&.any? %>
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <% @animals.each do |animal| %>
+        <%= render 'shared/animal_card', animal: animal %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-12 text-center shadow-sm">
+      <div class="w-24 h-24 bg-stone-100 dark:bg-stone-800 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-12 h-12 text-stone-400 dark:text-stone-500" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold text-stone-900 dark:text-stone-100 mb-2">
+        Nenhum animal encontrado
+      </h3>
+      <p class="text-stone-600 dark:text-stone-400 mb-6">
+        Comece cadastrando o primeiro animal da clínica.
+      </p>
+      <%= link_to new_animal_path, 
+          class: "inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors" do %>
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        Cadastrar Primeiro Animal
+      <% end %>
+    </div>
+  <% end %>
 </div>

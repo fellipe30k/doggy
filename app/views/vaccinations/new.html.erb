@@ -1,9 +1,19 @@
-<% content_for :title, "New vaccination" %>
+<!-- app/views/vaccinations/new.html.erb -->
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center gap-4">
+    <%= link_to vaccinations_path, 
+        class: "p-2 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-xl hover:bg-stone-50 dark:hover:bg-stone-800 transition-colors" do %>
+      <svg class="w-5 h-5 text-stone-600 dark:text-stone-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+      </svg>
+    <% end %>
+    <div>
+      <h1 class="text-2xl lg:text-3xl font-bold text-stone-900 dark:text-stone-100">Nova Vacinação</h1>
+      <p class="text-stone-600 dark:text-stone-400 mt-1">Registrar nova vacinação para um animal</p>
+    </div>
+  </div>
 
-<div class="md:w-2/3 w-full">
-  <h1 class="font-bold text-4xl">New vaccination</h1>
-
+  <!-- Form -->
   <%= render "form", vaccination: @vaccination %>
-
-  <%= link_to "Back to vaccinations", vaccinations_path, class: "w-full sm:w-auto text-center mt-2 sm:mt-0 sm:ml-2 rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
 </div>
