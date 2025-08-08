@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  species: MyString
+  breed: MyString
+  birth_date: 2025-08-08
+  weight: 9.99
+  color: MyString
+  microchip: MyString
+  user: one
+  company: one
+  owner_name: MyString
+  owner_phone: MyString
+  owner_email: MyString
+
+two:
+  name: MyString
+  species: MyString
+  breed: MyString
+  birth_date: 2025-08-08
+  weight: 9.99
+  color: MyString
+  microchip: MyString
+  user: two
+  company: two
+  owner_name: MyString
+  owner_phone: MyString
+  owner_email: MyString

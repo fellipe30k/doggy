@@ -1,0 +1,10 @@
+class AddFieldsToUsers < ActiveRecord::Migration[8.0]
+  def change
+    add_column :users, :role, :string
+    add_column :users, :company_id, :bigint
+    add_column :users, :first_name, :string
+    add_column :users, :last_name, :string
+    add_column :users, :phone, :string
+    add_column :users, :active, :boolean
+  end
+end

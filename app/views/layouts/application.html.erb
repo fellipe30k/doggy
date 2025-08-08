@@ -1,0 +1,35 @@
+<!-- app/views/layouts/application.html.erb -->
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+  <head>
+    <title>Doggy - Controle de Vacinação</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1f2937">
+    
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <link rel="manifest" href="<%= manifest_path %>">
+    
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="bg-gray-900 text-white min-h-screen">
+    <% if user_signed_in? %>
+      <%= render 'shared/navbar' %>
+    <% end %>
+    
+    <main class="<%= user_signed_in? ? 'pt-16' : '' %>">
+      <%= render 'shared/flash_messages' if notice || alert %>
+      <%= yield %>
+    </main>
+
+    <% if user_signed_in? %>
+      <%= render 'shared/bottom_nav' %>
+    <% end %>
+  </body>
+</html>

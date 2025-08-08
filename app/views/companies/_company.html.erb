@@ -1,0 +1,26 @@
+<div id="<%= dom_id company %>" class="w-full sm:w-auto my-5 space-y-5">
+  <div>
+    <strong class="block font-medium mb-1">Name:</strong>
+    <%= company.name %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Cnpj:</strong>
+    <%= company.cnpj %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Address:</strong>
+    <%= company.address %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Phone:</strong>
+    <%= company.phone %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Email:</strong>
+    <%= company.email %>
+  </div>
+  <div>
+    <strong class="block font-medium mb-1">Active:</strong>
+    <%= company.active? ? "Yes" : "No" %>
+  </div>
+</div>

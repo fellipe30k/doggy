@@ -1,0 +1,78 @@
+<!-- app/views/dashboard/index.html.erb -->
+<div class="p-4 pb-20">
+  <!-- Header -->
+  <div class="mb-6">
+    <h1 class="text-2xl font-bold text-white">Olá, <%= current_user.first_name %>! 👋</h1>
+    <p class="text-gray-400">Bem-vindo ao Doggy</p>
+  </div>
+
+  <!-- Quick Stats -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="bg-blue-500/20 border border-blue-500/30 rounded-2xl p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-blue-400 text-sm">Animais</p>
+          <p class="text-2xl font-bold text-white"><%= @animals_count %></p>
+        </div>
+        <div class="p-3 bg-blue-500/30 rounded-xl">
+          <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-green-500/20 border border-green-500/30 rounded-2xl p-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-green-400 text-sm">Vacinas Este Mês</p>
+          <p class="text-2xl font-bold text-white"><%= @vaccinations_count %></p>
+        </div>
+        <div class="p-3 bg-green-500/30 rounded-xl">
+          <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="mb-6">
+    <h2 class="text-lg font-semibold text-white mb-3">Ações Rápidas</h2>
+    <div class="grid grid-cols-2 gap-3">
+      <%= link_to new_animal_path, class: "bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-2xl p-4 text-center transition-colors" do %>
+        <div class="mx-auto w-12 h-12 bg-blue-500/20 rounded-xl flex items-center justify-center mb-2">
+          <svg class="w-6 h-6 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+        </div>
+        <p class="text-white font-medium">Novo Animal</p>
+        <p class="text-xs text-gray-400">Cadastrar animal</p>
+      <% end %>
+
+      <%= link_to vaccinations_path, class: "bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-2xl p-4 text-center transition-colors" do %>
+        <div class="mx-auto w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mb-2">
+          <svg class="w-6 h-6 text-green-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <p class="text-white font-medium">Vacinas</p>
+        <p class="text-xs text-gray-400">Ver histórico</p>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Recent Animals -->
+  <div class="mb-6">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-lg font-semibold text-white">Animais Recentes</h2>
+      <%= link_to animals_path, class: "text-blue-400 text-sm" do %>
+        Ver todos
+      <% end %>
+    </div>
+    <% @recent_animals&.each do |animal| %>
+      <%= render 'shared/animal_card', animal: animal %>
+    <% end %>
+  </div>
+</div>

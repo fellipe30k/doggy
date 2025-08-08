@@ -1,0 +1,107 @@
+<!-- app/views/animals/_form.html.erb -->
+<div class="p-4">
+  <%= form_with model: animal, class: "space-y-4" do |form| %>
+    <% if animal.errors.any? %>
+      <div class="bg-red-900/30 border border-red-700 rounded-lg p-4">
+        <h3 class="text-red-400 font-medium mb-2">Erro ao salvar:</h3>
+        <ul class="text-red-300 text-sm space-y-1">
+          <% animal.errors.full_messages.each do |message| %>
+            <li>• <%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Photo Upload -->
+    <div class="text-center">
+      <% if animal.photo.attached? %>
+        <%= image_tag animal.photo, class: "w-32 h-32 rounded-full mx-auto object-cover mb-4" %>
+      <% else %>
+        <div class="w-32 h-32 bg-gray-700 rounded-full mx-auto flex items-center justify-center mb-4">
+          <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/>
+          </svg>
+        </div>
+      <% end %>
+      <%= form.file_field :photo, class: "hidden", id: "photo_upload" %>
+      <label for="photo_upload" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg cursor-pointer transition-colors">
+        Escolher Foto
+      </label>
+    </div>
+
+    <!-- Name -->
+    <div>
+      <%= form.label :name, class: "block text-sm font-medium text-gray-300 mb-1" %>
+      <%= form.text_field :name, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+    </div>
+
+    <!-- Species & Breed -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= form.label :species, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.select :species, 
+            options_for_select([['Cão', 'Cão'], ['Gato', 'Gato'], ['Outro', 'Outro']], animal.species),
+            { prompt: 'Selecione...' },
+            { class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+      </div>
+      <div>
+        <%= form.label :breed, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.text_field :breed, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Birth Date & Weight -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= form.label :birth_date, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.date_field :birth_date, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+      <div>
+        <%= form.label :weight, "Peso (kg)", class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.number_field :weight, step: 0.1, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Color & Microchip -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= form.label :color, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.text_field :color, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+      <div>
+        <%= form.label :microchip, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.text_field :microchip, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+    </div>
+
+    <!-- Owner Info Section -->
+    <div class="border-t border-gray-700 pt-4">
+      <h3 class="text-lg font-semibold text-white mb-3">Dados do Proprietário</h3>
+      
+      <div>
+        <%= form.label :owner_name, class: "block text-sm font-medium text-gray-300 mb-1" %>
+        <%= form.text_field :owner_name, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          <%= form.label :owner_phone, class: "block text-sm font-medium text-gray-300 mb-1" %>
+          <%= form.telephone_field :owner_phone, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+        <div>
+          <%= form.label :owner_email, class: "block text-sm font-medium text-gray-300 mb-1" %>
+          <%= form.email_field :owner_email, class: "w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex space-x-3 pt-4">
+      <%= link_to animals_path, class: "flex-1 bg-gray-700 hover:bg-gray-600 text-white py-3 px-4 rounded-lg text-center font-medium transition-colors" do %>
+        Cancelar
+      <% end %>
+      <%= form.submit animal.persisted? ? "Atualizar Animal" : "Cadastrar Animal", 
+          class: "flex-1 bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-medium transition-colors" %>
+    </div>
+  <% end %>
+</div>
