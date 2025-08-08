@@ -42,20 +42,7 @@
               <span><%= number_with_precision(animal.weight, precision: 1) %>kg</span>
             </span>
           </p>
-        </div>
-        
-        <!-- QR Code Button -->
-        <div class="mt-6 text-center">
-          <%= link_to qr_code_animal_path(id: animal.id), 
-              class: "inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded-xl transition-colors",
-              target: "_blank" do %>
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm-2 8h8v8H3v-8zm2 2v4h4v-4H5zm8-12v8h8V3h-8zm2 2h4v4h-4V5zm6 6h2v2h-2v-2zm0 2h2v2h-2v-2zm-2 0h2v2h-2v-2zm2 2h2v2h-2v-2zm0 2h2v2h-2v-2z"/>
-            </svg>
-            Gerar QR Code
-          <% end %>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-2">Para acesso do proprietário</p>
-        </div>
+        </div>        
       </div>
       
       <!-- Vaccination Status -->
@@ -106,9 +93,9 @@
       <% end %>
 
       <!-- Action Buttons -->
-      <div class="flex space-x-2 mt-4">
+      <div class="grid grid-cols-2 gap-2 mt-4">
         <%= link_to animal_path(animal), 
-            class: "flex-1 inline-flex items-center justify-center px-3 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm font-medium rounded-lg transition-colors" do %>
+            class: "inline-flex items-center justify-center px-3 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 text-sm font-medium rounded-lg transition-colors" do %>
           <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
           </svg>
@@ -116,11 +103,30 @@
         <% end %>
         
         <%= link_to new_animal_vaccination_path(animal), 
-            class: "flex-1 inline-flex items-center justify-center px-3 py-2 bg-green-100 dark:bg-green-950/50 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 text-sm font-medium rounded-lg transition-colors" do %>
+            class: "inline-flex items-center justify-center px-3 py-2 bg-green-100 dark:bg-green-950/50 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-300 text-sm font-medium rounded-lg transition-colors" do %>
           <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
           </svg>
           Nova Vacina
+        <% end %>
+        
+        <!-- NOVOS BOTÕES - Carteirinhas -->
+        <%= link_to vaccination_card_animal_path(animal, format: 'portrait'), 
+            class: "inline-flex items-center justify-center px-3 py-2 bg-purple-100 dark:bg-purple-950/50 hover:bg-purple-200 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-300 text-sm font-medium rounded-lg transition-colors",
+            target: "_blank" do %>
+          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
+          </svg>
+          Carteirinha
+        <% end %>
+        
+        <%= link_to qr_code_animal_path(animal), 
+            class: "inline-flex items-center justify-center px-3 py-2 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 text-sm font-medium rounded-lg transition-colors",
+            target: "_blank" do %>
+          <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm-2 8h8v8H3v-8zm2 2v4h4v-4H5zm8-12v8h8V3h-8zm2 2h4v4h-4V5zm6 6h2v2h-2v-2zm0 2h2v2h-2v-2zm-2 0h2v2h-2v-2zm2 2h2v2h-2v-2zm0 2h2v2h-2v-2z"/>
+          </svg>
+          QR Code
         <% end %>
       </div>
     </div>

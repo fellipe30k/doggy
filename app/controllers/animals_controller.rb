@@ -1,6 +1,6 @@
 # app/controllers/animals_controller.rb
 class AnimalsController < ApplicationController
-  before_action :set_animal, only: [:show, :edit, :update, :destroy, :qr_code]
+  before_action :set_animal, only: [:show, :edit, :update, :destroy, :qr_code, :vaccination_card]
   before_action :ensure_same_company!, only: [:show, :edit, :update, :destroy, :qr_code]
 
   def index
@@ -13,6 +13,18 @@ class AnimalsController < ApplicationController
 
   def new
     @animal = Animal.new
+  end
+
+  def vaccination_card
+    @vaccinations = @animal.vaccinations.recent.limit(10)
+    @qr_code_data_url = generate_qr_code_data_url
+    @format = params[:format] || 'portrait' # portrait (300x600) ou landscape (600x300)
+
+    request.format = :html
+
+    respond_to do |format|
+      format.html { render layout: false }
+    end
   end
 
   def create
@@ -64,6 +76,40 @@ class AnimalsController < ApplicationController
   end
 
   private
+
+  def generate_qr_code_data_url
+    require 'rqrcode'
+    begin
+      qr_url = @animal.qr_code_data
+      qrcode = RQRCode::QRCode.new(qr_url, size: 4, level: :m)
+      png = qrcode.as_png(
+        resize_gte_to: false,
+        resize_exactly_to: false,
+        fill: 'white',
+        color: 'black',
+        size: 200,
+        border_modules: 2
+      )
+      "data:image/png;base64,#{Base64.strict_encode64(png.to_s)}"
+    rescue => e
+      Rails.logger.error "Erro ao gerar QR Code: #{e.message}"
+      # Fallback: gerar QR code simples
+      "data:image/svg+xml;base64,#{Base64.strict_encode64(generate_fallback_qr_svg)}"
+    end
+  end
+
+  def generate_fallback_qr_svg
+    # SVG simples como fallback caso o PNG falhe
+    <<~SVG
+      <svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+        <rect width="200" height="200" fill="white" stroke="#333" stroke-width="2"/>
+        <text x="100" y="90" text-anchor="middle" font-family="Arial" font-size="14" fill="#333">QR CODE</text>
+        <text x="100" y="110" text-anchor="middle" font-family="Arial" font-size="12" fill="#666">#{@animal.name}</text>
+        <text x="100" y="130" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">Escaneie para ver</text>
+        <text x="100" y="145" text-anchor="middle" font-family="Arial" font-size="10" fill="#999">histórico completo</text>
+      </svg>
+    SVG
+  end
 
   def set_animal
     @animal = Animal.find(params[:id])

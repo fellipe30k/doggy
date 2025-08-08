@@ -1,19 +1,22 @@
-<!-- app/views/vaccinations/_form.html.erb -->
+<!-- app/views/vaccinations/_form.html.erb - MELHORADO -->
 <div class="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm">
   <%= form_with model: vaccination, class: "space-y-6" do |form| %>
     <% if vaccination.errors.any? %>
       <div class="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4">
         <div class="flex items-start">
-          <svg class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
           </svg>
           <div>
             <h3 class="text-red-800 dark:text-red-200 font-semibold mb-2">
-              Erro ao salvar (<%= pluralize(vaccination.errors.count, "erro") %>):
+              <%= pluralize(vaccination.errors.count, "erro encontrado", "erros encontrados") %>:
             </h3>
             <ul class="text-red-700 dark:text-red-300 text-sm space-y-1">
               <% vaccination.errors.full_messages.each do |message| %>
-                <li>• <%= message %></li>
+                <li class="flex items-center">
+                  <span class="w-1 h-1 bg-red-500 rounded-full mr-2 flex-shrink-0"></span>
+                  <%= message %>
+                </li>
               <% end %>
             </ul>
           </div>
@@ -21,90 +24,217 @@
       </div>
     <% end %>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Animal Selection -->
-      <div class="lg:col-span-2">
-        <%= form.label :animal_id, "Animal *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.select :animal_id, 
-            options_from_collection_for_select(@animals, :id, :name, vaccination.animal_id),
-            { prompt: 'Selecione o animal...' },
-            { class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all", 
-              required: true } %>
-      </div>
+    <!-- Animal Selection -->
+    <div class="space-y-2">
+      <%= form.label :animal_id, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+        <span class="flex items-center">
+          🐕 Animal *
+          <span class="ml-2 px-2 py-1 bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
+            Obrigatório
+          </span>
+        </span>
+      <% end %>
+      
+      <%= form.select :animal_id, 
+          options_from_collection_for_select(@animals || [], :id, :name, vaccination.animal_id),
+          { 
+            prompt: '🔍 Selecione o animal para vacinação...',
+            include_blank: false 
+          },
+          { 
+            class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all shadow-sm",
+            required: true,
+            onchange: "updateAnimalInfo(this.value)"
+          } %>
+      <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">
+        💡 Tip: Digite o nome do animal para buscar rapidamente
+      </p>
+    </div>
 
-      <!-- Vaccine Information -->
-      <div>
-        <%= form.label :vaccine_name, "Nome da Vacina *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.text_field :vaccine_name, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-            placeholder: "Ex: V10, Anti-rábica...",
-            required: true %>
-      </div>
+    <!-- Vaccine Information Section -->
+    <div class="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-xl p-6">
+      <h3 class="text-lg font-bold text-green-900 dark:text-green-100 mb-4 flex items-center">
+        💉 Informações da Vacina
+      </h3>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= form.label :vaccine_name, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            Nome da Vacina *
+          <% end %>
+          <%= form.text_field :vaccine_name, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all shadow-sm",
+              placeholder: "Ex: V10, Antirrábica, Tríplice Felina...",
+              required: true,
+              list: "vaccine_names" %>
+          
+          <!-- Datalist for common vaccines -->
+          <datalist id="vaccine_names">
+            <option value="V8 (Óctupla)">
+            <option value="V10 (Déctupla)">
+            <option value="Antirrábica">
+            <option value="Tríplice Felina">
+            <option value="Quádrupla Felina">
+            <option value="Leucemia Felina">
+            <option value="Giárdia">
+            <option value="Gripe Canina">
+          </datalist>
+        </div>
 
-      <div>
-        <%= form.label :vaccine_brand, "Marca/Laboratório *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.text_field :vaccine_brand, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-            placeholder: "Ex: Zoetis, Virbac...",
-            required: true %>
+        <div class="space-y-2">
+          <%= form.label :vaccine_brand, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            Marca/Laboratório *
+          <% end %>
+          <%= form.text_field :vaccine_brand, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all shadow-sm",
+              placeholder: "Ex: Zoetis, Virbac, Merial...",
+              required: true,
+              list: "vaccine_brands" %>
+              
+          <datalist id="vaccine_brands">
+            <option value="Zoetis">
+            <option value="Virbac">
+            <option value="Merial">
+            <option value="Boehringer">
+            <option value="Fort Dodge">
+          </datalist>
+        </div>
       </div>
+    </div>
 
-      <!-- Dates -->
-      <div>
-        <%= form.label :application_date, "Data de Aplicação *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.date_field :application_date, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-            value: vaccination.application_date || Date.current,
-            required: true %>
-      </div>
+    <!-- Dates Section -->
+    <div class="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-6">
+      <h3 class="text-lg font-bold text-blue-900 dark:text-blue-100 mb-4 flex items-center">
+        📅 Datas da Vacinação
+      </h3>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= form.label :application_date, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            <span class="flex items-center">
+              Data de Aplicação *
+              <span class="ml-2 px-2 py-1 bg-blue-100 dark:bg-blue-950/50 text-blue-700 dark:text-blue-300 text-xs font-medium rounded-full">
+                Hoje: <%= Date.current.strftime("%d/%m/%Y") %>
+              </span>
+            </span>
+          <% end %>
+          <%= form.date_field :application_date, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm",
+              value: vaccination.application_date || Date.current,
+              required: true %>
+        </div>
 
-      <div>
-        <%= form.label :next_dose_date, "Próxima Dose", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.date_field :next_dose_date, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" %>
-        <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">Opcional - para reforços ou doses anuais</p>
+        <div class="space-y-2">
+          <%= form.label :next_dose_date, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            Próxima Dose
+            <span class="text-stone-500 dark:text-stone-400 font-normal">(Opcional)</span>
+          <% end %>
+          <%= form.date_field :next_dose_date, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all shadow-sm" %>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">
+            💡 Deixe vazio se for dose única ou não souber quando será o reforço
+          </p>
+        </div>
       </div>
+    </div>
 
-      <!-- Professional Information -->
-      <div>
-        <%= form.label :veterinarian_name, "Veterinário Responsável *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.text_field :veterinarian_name, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all",
-            placeholder: "Nome completo do veterinário",
-            value: vaccination.veterinarian_name || current_user.full_name,
-            required: true %>
-      </div>
+    <!-- Professional Information -->
+    <div class="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-6">
+      <h3 class="text-lg font-bold text-purple-900 dark:text-purple-100 mb-4 flex items-center">
+        👨‍⚕️ Informações Profissionais
+      </h3>
+      
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <%= form.label :veterinarian_name, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            Veterinário Responsável *
+          <% end %>
+          <%= form.text_field :veterinarian_name, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all shadow-sm",
+              placeholder: "Nome completo do veterinário",
+              value: vaccination.veterinarian_name || current_user&.full_name,
+              required: true %>
+        </div>
 
-      <div>
-        <%= form.label :batch_number, "Número do Lote *", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.text_field :batch_number, 
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all font-mono",
-            placeholder: "Ex: ABC123DEF",
-            required: true %>
+        <div class="space-y-2">
+          <%= form.label :batch_number, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+            Número do Lote *
+          <% end %>
+          <%= form.text_field :batch_number, 
+              class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 font-mono focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all shadow-sm",
+              placeholder: "Ex: ABC123DEF456",
+              required: true %>
+          <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">
+            🔍 Encontre este número na embalagem da vacina
+          </p>
+        </div>
       </div>
+    </div>
 
-      <!-- Observations -->
-      <div class="lg:col-span-2">
-        <%= form.label :observations, "Observações", class: "block text-sm font-semibold text-stone-700 dark:text-stone-300 mb-2" %>
-        <%= form.text_area :observations, 
-            rows: 4,
-            class: "w-full bg-white dark:bg-stone-800 border border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none",
-            placeholder: "Reações adversas, observações especiais, etc..." %>
-      </div>
+    <!-- Observations -->
+    <div class="space-y-2">
+      <%= form.label :observations, class: "block text-sm font-bold text-stone-700 dark:text-stone-300" do %>
+        📝 Observações Adicionais
+        <span class="text-stone-500 dark:text-stone-400 font-normal">(Opcional)</span>
+      <% end %>
+      <%= form.text_area :observations, 
+          rows: 4,
+          class: "w-full bg-white dark:bg-stone-800 border-2 border-stone-300 dark:border-stone-700 rounded-xl px-4 py-3 text-stone-900 dark:text-stone-100 focus:ring-2 focus:ring-stone-500 focus:border-transparent transition-all shadow-sm resize-none",
+          placeholder: "Descreva reações adversas, observações especiais, comportamento do animal, etc..." %>
+      <p class="text-xs text-stone-500 dark:text-stone-400 mt-1">
+        💡 Registre qualquer reação ou comportamento especial observado
+      </p>
     </div>
 
     <!-- Submit Buttons -->
     <div class="flex flex-col sm:flex-row gap-3 pt-6 border-t border-stone-200 dark:border-stone-800">
-      <%= link_to polymorphic_path([@animal, Vaccination].compact) || vaccinations_path, 
-          class: "inline-flex items-center justify-center px-6 py-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold rounded-xl transition-all" do %>
+      <%= link_to vaccination.persisted? ? vaccination_path(vaccination) : vaccinations_path, 
+          class: "inline-flex items-center justify-center px-6 py-3 bg-stone-100 dark:bg-stone-800 hover:bg-stone-200 dark:hover:bg-stone-700 text-stone-700 dark:text-stone-300 font-semibold rounded-xl transition-all border border-stone-300 dark:border-stone-700" do %>
         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
         Cancelar
       <% end %>
       
-      <%= form.submit vaccination.persisted? ? "Atualizar Vacinação" : "Registrar Vacinação", 
-          class: "inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl" %>
+      <%= form.submit vaccination.persisted? ? "💾 Atualizar Vacinação" : "💉 Registrar Vacinação", 
+          class: "inline-flex items-center justify-center px-6 py-3 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl border-2 border-green-600 hover:border-green-700" %>
     </div>
   <% end %>
 </div>
+
+<script>
+  // Auto-suggestion for quick date filling
+  document.addEventListener('DOMContentLoaded', function() {
+    const vaccineNameField = document.querySelector('#vaccination_vaccine_name');
+    const nextDoseField = document.querySelector('#vaccination_next_dose_date');
+    const applicationDateField = document.querySelector('#vaccination_application_date');
+    
+    if (vaccineNameField && nextDoseField && applicationDateField) {
+      vaccineNameField.addEventListener('change', function() {
+        const vaccineName = this.value.toLowerCase();
+        const applicationDate = new Date(applicationDateField.value || Date.now());
+        let suggestedNextDate = null;
+        
+        // Auto-suggest next dose dates based on common vaccines
+        if (vaccineName.includes('v8') || vaccineName.includes('v10')) {
+          suggestedNextDate = new Date(applicationDate);
+          suggestedNextDate.setFullYear(suggestedNextDate.getFullYear() + 1);
+        } else if (vaccineName.includes('antirrábica') || vaccineName.includes('antirrabica')) {
+          suggestedNextDate = new Date(applicationDate);
+          suggestedNextDate.setFullYear(suggestedNextDate.getFullYear() + 1);
+        } else if (vaccineName.includes('tríplice') || vaccineName.includes('tripla')) {
+          suggestedNextDate = new Date(applicationDate);
+          suggestedNextDate.setFullYear(suggestedNextDate.getFullYear() + 1);
+        }
+        
+        if (suggestedNextDate && !nextDoseField.value) {
+          nextDoseField.value = suggestedNextDate.toISOString().split('T')[0];
+          nextDoseField.classList.add('ring-2', 'ring-yellow-400', 'bg-yellow-50', 'dark:bg-yellow-950/30');
+          setTimeout(() => {
+            nextDoseField.classList.remove('ring-2', 'ring-yellow-400', 'bg-yellow-50', 'dark:bg-yellow-950/30');
+          }, 2000);
+        }
+      });
+    }
+  });
+</script>

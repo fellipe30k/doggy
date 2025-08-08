@@ -54,17 +54,54 @@
           <% end %>
         </div>
         
-        <!-- QR Code -->
-        <div class="mt-6 text-center">
-          <%= link_to qr_code_animal_path(id: @animal.id), 
-              class: "inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded-xl transition-colors",
-              target: "_blank" do %>
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm-2 8h8v8H3v-8zm2 2v4h4v-4H5zm8-12v8h8V3h-8zm2 2h4v4h-4V5zm6 6h2v2h-2v-2zm0 2h2v2h-2v-2zm-2 0h2v2h-2v-2zm2 2h2v2h-2v-2zm0 2h2v2h-2v-2z"/>
-            </svg>
-            Gerar QR Code
-          <% end %>
-          <p class="text-xs text-stone-500 dark:text-stone-400 mt-2">Para acesso do proprietário</p>
+        <!-- QR Code e Carteirinhas - ATUALIZADO -->
+        <div class="mt-6 space-y-4">
+          <div class="text-center">
+            <%= link_to qr_code_animal_path(@animal), 
+                class: "inline-flex items-center px-4 py-2 bg-blue-100 dark:bg-blue-950/50 hover:bg-blue-200 dark:hover:bg-blue-900/50 text-blue-700 dark:text-blue-300 font-medium rounded-xl transition-colors",
+                target: "_blank" do %>
+              <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm-2 8h8v8H3v-8zm2 2v4h4v-4H5zm8-12v8h8V3h-8zm2 2h4v4h-4V5zm6 6h2v2h-2v-2zm0 2h2v2h-2v-2zm-2 0h2v2h-2v-2zm2 2h2v2h-2v-2zm0 2h2v2h-2v-2z"/>
+              </svg>
+              Gerar QR Code
+            <% end %>
+            <p class="text-xs text-stone-500 dark:text-stone-400 mt-2">Para acesso do proprietário</p>
+          </div>
+
+          <!-- NOVA SEÇÃO - Carteirinhas -->
+          <div class="border-t border-stone-200 dark:border-stone-800 pt-4">
+            <h3 class="text-sm font-semibold text-stone-700 dark:text-stone-300 mb-3 text-center">
+              📄 Carteirinhas de Vacinação
+            </h3>
+            <div class="grid grid-cols-2 gap-3">
+              <%= link_to vaccination_card_animal_path(@animal, format: 'portrait'), 
+                  class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-purple-50 dark:hover:bg-purple-950/50 border border-stone-200 dark:border-stone-700 hover:border-purple-300 dark:hover:border-purple-700 rounded-xl p-3 text-center transition-all duration-300",
+                  target: "_blank" do %>
+                <div class="w-8 h-12 bg-purple-100 dark:bg-purple-950/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 rounded-lg flex items-center justify-center mx-auto mb-2 transition-colors">
+                  <svg class="w-4 h-6 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </div>
+                <p class="text-xs font-medium text-stone-700 dark:text-stone-300">Retrato</p>
+                <p class="text-xs text-stone-500 dark:text-stone-400">300×600</p>
+              <% end %>
+
+              <%= link_to vaccination_card_animal_path(@animal, format: 'landscape'), 
+                  class: "group bg-stone-50 dark:bg-stone-800/50 hover:bg-purple-50 dark:hover:bg-purple-950/50 border border-stone-200 dark:border-stone-700 hover:border-purple-300 dark:hover:border-purple-700 rounded-xl p-3 text-center transition-all duration-300",
+                  target: "_blank" do %>
+                <div class="w-12 h-8 bg-purple-100 dark:bg-purple-950/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/50 rounded-lg flex items-center justify-center mx-auto mb-2 transition-colors">
+                  <svg class="w-6 h-4 text-purple-600 dark:text-purple-400" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                  </svg>
+                </div>
+                <p class="text-xs font-medium text-stone-700 dark:text-stone-300">Paisagem</p>
+                <p class="text-xs text-stone-500 dark:text-stone-400">600×300</p>
+              <% end %>
+            </div>
+            <p class="text-xs text-stone-500 dark:text-stone-400 mt-3 text-center">
+              Carteirinhas com foto, dados e QR code para impressão
+            </p>
+          </div>
         </div>
       </div>
 

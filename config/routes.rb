@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   resources :animals do
     member do
       get "qr_code", defaults: { format: "png" }
+      get "vaccination_card"
     end
     resources :vaccinations, controller: "animals/vaccinations", except: [ :index ]
   end
